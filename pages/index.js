@@ -1,5 +1,7 @@
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Hint } from 'react-autocomplete-hint';
+import tickerList from '../tickers.json';
 
 import {
   Chart as ChartJS,
@@ -27,6 +29,8 @@ export default function Home() {
   const [ticker, setTicker] = useState('');
   const [options, setOptions] = useState({});
   const [EPS, setEPS] = useState({});
+  const [hintData, setHintData] = useState(tickerList);
+
 
   const fetchData = async () => {
     const response = await fetch(`api/getSummary?ticker=${ticker}`);
@@ -56,18 +60,14 @@ export default function Home() {
         },
       ],
     });
-    
+
     setDataLoaded(true);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     fetchData();
     console.log(data);
-  };
-
-  const handleChangeInput = (e) => {
-    setTicker(e.target.value);
   };
 
   return (
@@ -77,17 +77,19 @@ export default function Home() {
       ) : (
         <h1> input stock ticker </h1>
       )}
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="ticker">Ticker</label>
-        <input
-          onChange={handleChangeInput}
-          placeholder="aapl"
-          type="text"
-          id="ticker"
-          required
-        />
-        <button type="submit">Submit</button>
-      </form>
+
+        <Hint options={hintData} allowTabFill>
+          <input
+            className="input-with-hint"
+            value={ticker}
+            onChange={e => setTicker(e.target.value)}
+            placeholder="aapl"
+            type="text"
+            id="ticker"
+            required
+          />
+        </Hint>
+        <button onClick={handleSubmit} type="submit">Submit</button>
 
       {dataLoaded ? (
         <Bar options={options} data={EPS} />

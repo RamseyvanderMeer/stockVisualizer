@@ -12,6 +12,7 @@
     "chart.js": "^4.0.1",
     "next": "^13.0.0",
     "react": "^18.0.0",
+    "react-autocomplete-hint": "^2.0.0",
     "react-chartjs-2": "^5.0.1",
     "react-dom": "^18.0.0"
   }
