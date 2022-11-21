@@ -28,9 +28,11 @@ export default function Home() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [ticker, setTicker] = useState('');
   const [options, setOptions] = useState({});
-  const [EPS, setEPS] = useState({});
-  const [hintData, setHintData] = useState(tickerList);
 
+  const [freeCashFlow, setfreeCashFlow] = useState({});
+  const [inventory, setInventory] = useState({});
+
+  const [hintData, setHintData] = useState(tickerList);
 
   const fetchData = async () => {
     const response = await fetch(`api/getSummary?ticker=${ticker}`);
@@ -45,17 +47,28 @@ export default function Home() {
         },
         title: {
           display: true,
-          text: `${tickerData.symbol}`,
+          text: `${ticker}`,
         },
       },
     });
 
-    setEPS({
-      labels: tickerData.quarterlyEarnings.map(({reportedDate})=>reportedDate).reverse(),
+    setfreeCashFlow({
+      labels: tickerData.map(({ fillingDate }) => fillingDate).reverse(),
       datasets: [
         {
-          label: 'EPS',
-          data: tickerData.quarterlyEarnings.map(({reportedEPS})=>reportedEPS).reverse(),
+          label: 'Free Cash Flow',
+          data: tickerData.map(({ freeCashFlow }) => freeCashFlow).reverse(),
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+      ],
+    });
+
+    setInventory({
+      labels: tickerData.map(({ fillingDate }) => fillingDate).reverse(),
+      datasets: [
+        {
+          label: 'Inventory',
+          data: tickerData.map(({ inventory }) => inventory).reverse(),
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
       ],
@@ -65,34 +78,38 @@ export default function Home() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     fetchData();
-    console.log(data);
   };
 
   return (
     <div>
       {dataLoaded ? (
-        <h1>{`stock: ${data.symbol}`}</h1>
+        <h1>{`stock: ${ticker}`}</h1>
       ) : (
         <h1> input stock ticker </h1>
       )}
 
-        <Hint options={hintData} allowTabFill>
-          <input
-            className="input-with-hint"
-            value={ticker}
-            onChange={e => setTicker(e.target.value)}
-            placeholder="aapl"
-            type="text"
-            id="ticker"
-            required
-          />
-        </Hint>
-        <button onClick={handleSubmit} type="submit">Submit</button>
+      <Hint options={hintData} allowTabFill>
+        <input
+          className="input-with-hint"
+          value={ticker}
+          onChange={(e) => setTicker(e.target.value)}
+          placeholder="aapl"
+          type="text"
+          id="ticker"
+          required
+        />
+      </Hint>
+      <button onClick={handleSubmit} type="submit">
+        Submit
+      </button>
 
       {dataLoaded ? (
-        <Bar options={options} data={EPS} />
+        <div>
+          <Bar options={options} data={freeCashFlow} />
+          <Bar options={options} data={inventory} />
+        </div>
       ) : (
         <h1> chart will show up once ticker is inputed </h1>
       )}
