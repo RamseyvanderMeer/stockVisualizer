@@ -368,8 +368,6 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log(revBySeg);
-
     let data = {
       cashFlow: cashFlow.data,
       revenueSegments: revBySeg,

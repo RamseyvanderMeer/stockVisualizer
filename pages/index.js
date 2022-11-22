@@ -55,22 +55,24 @@ export default function Home() {
     });
 
     setfreeCashFlow({
-      labels: data.cashFlow.map(({ fillingDate }) => fillingDate).reverse(),
+      labels: tickerData.cashFlow.map(({ fillingDate }) => fillingDate).reverse(),
       datasets: [
         {
           label: 'Free Cash Flow',
-          data: data.cashFlow.map(({ freeCashFlow }) => freeCashFlow).reverse(),
+          data: tickerData.cashFlow.map(({ freeCashFlow }) => freeCashFlow).reverse(),
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
       ],
     });
 
+    console.log(tickerData.cashFlow)
+
     setInventory({
-      labels: data.cashFlow.map(({ fillingDate }) => fillingDate).reverse(),
+      labels: tickerData.cashFlow.map(({ fillingDate }) => fillingDate).reverse(),
       datasets: [
         {
           label: 'Inventory',
-          data: data.cashFlow.map(({ inventory }) => inventory).reverse(),
+          data: tickerData.cashFlow.map(({ inventory }) => inventory).reverse(),
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
       ],
@@ -78,15 +80,15 @@ export default function Home() {
 
     let dictKeys = {};
 
-    for (let i in data.revenueSegments.reverse()) {
-      for (let j in Object.keys(data.revenueSegments[i])) {
-        let name = Object.keys(data.revenueSegments[i])[j].toLowerCase();
+    for (let i in tickerData.revenueSegments.reverse()) {
+      for (let j in Object.keys(tickerData.revenueSegments[i])) {
+        let name = Object.keys(tickerData.revenueSegments[i])[j].toLowerCase();
         if (dictKeys[name]) {
           for (let x = 0; x < i - dictKeys[name].length - 1; x++) {
             dictKeys[name].push(0);
           }
           dictKeys[name].push(
-            data.revenueSegments[i][Object.keys(data.revenueSegments[i])[j]]
+            tickerData.revenueSegments[i][Object.keys(tickerData.revenueSegments[i])[j]]
           );
         } else {
           dictKeys[name] = [];
@@ -94,7 +96,7 @@ export default function Home() {
             dictKeys[name].push(0);
           }
           dictKeys[name].push(
-            data.revenueSegments[i][Object.keys(data.revenueSegments[i])[j]]
+            tickerData.revenueSegments[i][Object.keys(tickerData.revenueSegments[i])[j]]
           );
         }
       }
@@ -106,14 +108,13 @@ export default function Home() {
         revSegSet.push({
           label: item,
           data: dictKeys[item],
-          backgroundColor: `rgba(${rand(225, 255)}, ${rand(0, 5)}, ${rand(
-            1,
+          backgroundColor: `rgba(${rand(0, 100)}, ${rand(200, 255)}, ${rand(
+            200,
             255
           )}, 0.5)`,
         });
     });
 
-    console.log(revSegSet);
 
     setRevenueSegments({
       labels: dictKeys.date,
