@@ -25,7 +25,6 @@ ChartJS.register(
 );
 
 export default function Home() {
-  const [data, setData] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [ticker, setTicker] = useState('');
   const [options, setOptions] = useState({});
@@ -39,7 +38,6 @@ export default function Home() {
   const fetchData = async () => {
     const response = await fetch(`api/getSummary?ticker=${ticker}`);
     const tickerData = await response.json();
-    setData(tickerData);
 
     setOptions({
       responsive: true,
